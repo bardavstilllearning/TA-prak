@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 class ProfileCard extends StatelessWidget {
@@ -37,7 +38,9 @@ class ProfileCard extends StatelessWidget {
               CircleAvatar(
                 radius: 50,
                 backgroundColor: const Color(0xFF6BB6FF),
-                backgroundImage: _buildProfileImage(),
+                backgroundImage: userData?['url_foto'] != null
+                    ? FileImage(File(userData!['url_foto']))
+                    : null,
                 child: _buildProfileIcon(),
               ),
               Positioned(
@@ -68,7 +71,9 @@ class ProfileCard extends StatelessWidget {
                                 width: 16,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
                                 ),
                               )
                             : const Icon(
@@ -100,10 +105,7 @@ class ProfileCard extends StatelessWidget {
 
           Text(
             '@${username ?? 'loading'}',
-            style: const TextStyle(
-              fontSize: 14,
-              color: Color(0xFF7F8C8D),
-            ),
+            style: const TextStyle(fontSize: 14, color: Color(0xFF7F8C8D)),
           ),
 
           const SizedBox(height: 8),
@@ -154,7 +156,10 @@ class ProfileCard extends StatelessWidget {
               child: Column(
                 children: [
                   _buildInfoRow('Username', userData!['username']),
-                  _buildInfoRow('Bergabung', _formatDate(userData!['created_at'])),
+                  _buildInfoRow(
+                    'Bergabung',
+                    _formatDate(userData!['created_at']),
+                  ),
                   if (userData!['url_foto'] != null)
                     _buildInfoRow('Foto Profile', 'Tersedia'),
                 ],
@@ -164,14 +169,6 @@ class ProfileCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  ImageProvider? _buildProfileImage() {
-    final photoUrl = userData?['url_foto'];
-    if (photoUrl != null && photoUrl.toString().isNotEmpty) {
-      return NetworkImage(photoUrl.toString());
-    }
-    return null;
   }
 
   Widget? _buildProfileIcon() {

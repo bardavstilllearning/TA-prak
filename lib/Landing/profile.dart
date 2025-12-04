@@ -5,6 +5,7 @@ import '../controller/profileController.dart';
 import 'notificationTest.dart';
 import 'editProfile.dart';
 import 'kesanpesan.dart'; // Import halaman kesan pesan
+import 'widgets/custom_snackbar.dart';
 import 'widgets/profileHeader.dart';
 import 'widgets/profileCard.dart';
 
@@ -56,11 +57,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (success) {
       await _loadUserData();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Foto profile berhasil diupload!'),
-          backgroundColor: Colors.green,
-        ),
+      CustomSnackbar.show(
+        context,
+        message: "Foto profile berhasil diupload!",
+        backgroundColor: Colors.green,
       );
     }
   }
@@ -84,18 +84,14 @@ class _ProfilePageState extends State<ProfilePage> {
   void _navigateToNotificationTest() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const NotificationTestPage(),
-      ),
+      MaterialPageRoute(builder: (context) => const NotificationTestPage()),
     );
   }
 
   void _navigateToKesanPesan() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const KesanPesanPage(),
-      ),
+      MaterialPageRoute(builder: (context) => const KesanPesanPage()),
     );
   }
 
@@ -225,10 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
           decoration: BoxDecoration(
             color: color.withOpacity(0.05),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: color.withOpacity(0.2),
-              width: 1,
-            ),
+            border: Border.all(color: color.withOpacity(0.2), width: 1),
           ),
           child: Row(
             children: [
@@ -238,11 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 24,
-                ),
+                child: Icon(icon, color: color, size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -260,19 +249,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],
                 ),
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.grey[400],
-                size: 16,
-              ),
+              Icon(Icons.arrow_forward_ios, color: Colors.grey[400], size: 16),
             ],
           ),
         ),

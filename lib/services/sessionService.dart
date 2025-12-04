@@ -1,41 +1,41 @@
-import '../controller/loginController.dart';
+import '../services/databaseService.dart';
 
 class SessionService {
-  static final LoginController _loginController = LoginController();
-
+  // Check authentication status
   static Future<bool> checkAuthStatus() async {
     try {
-      final isLoggedIn = await _loginController.isLoggedIn();
-      final isValid = await _loginController.isSessionValid();
-      
-      print('Auth Status - Logged In: $isLoggedIn, Valid: $isValid');
-      return isLoggedIn && isValid;
+      return await DatabaseService.isLoggedIn();
     } catch (e) {
       print('Auth Check Error: $e');
       return false;
     }
   }
 
+  // Clear expired session
   static Future<void> clearExpiredSession() async {
     try {
-      final isValid = await _loginController.isSessionValid();
+      final isValid = await DatabaseService.isSessionValid();
       if (!isValid) {
-        await _loginController.logout();
+        await DatabaseService.clearSession();
       }
     } catch (e) {
       print('Clear Session Error: $e');
     }
   }
 
+  // Get username
   static Future<String?> getUsername() async {
-    return await _loginController.getUsername();
+    return await DatabaseService.getCurrentUsername();
   }
 
+  // Get user data
   static Future<Map<String, dynamic>?> getUserData() async {
-    return await _loginController.getUserData();
+    final user = await DatabaseService.getCurrentUser();
+    return user?.toMap();
   }
 
+  // Logout
   static Future<void> logout() async {
-    await _loginController.logout();
+    await DatabaseService.clearSession();
   }
 }

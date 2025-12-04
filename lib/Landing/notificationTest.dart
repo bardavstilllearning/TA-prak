@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../controller/notificationController.dart';
+import 'widgets/custom_snackbar.dart';
 
 class NotificationTestPage extends StatefulWidget {
   const NotificationTestPage({super.key});
@@ -67,10 +68,7 @@ class _NotificationTestPageState extends State<NotificationTestPage> {
                     const SizedBox(height: 8),
                     const Text(
                       'Total Notifikasi',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                     ValueListenableBuilder<int>(
                       valueListenable: _controller.totalSent,
@@ -146,14 +144,16 @@ class _NotificationTestPageState extends State<NotificationTestPage> {
                         Expanded(
                           child: _buildScheduleButton(
                             title: '1 Menit',
-                            onPressed: () => _controller.scheduleTest(delayMinutes: 1),
+                            onPressed: () =>
+                                _controller.scheduleTest(delayMinutes: 1),
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: _buildScheduleButton(
                             title: '2 Menit',
-                            onPressed: () => _controller.scheduleTest(delayMinutes: 2),
+                            onPressed: () =>
+                                _controller.scheduleTest(delayMinutes: 2),
                           ),
                         ),
                       ],
@@ -195,10 +195,7 @@ class _NotificationTestPageState extends State<NotificationTestPage> {
                           ),
                           Text(
                             'Kirim otomatis setiap 10 detik',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
                           ),
                         ],
                       ),
@@ -211,19 +208,17 @@ class _NotificationTestPageState extends State<NotificationTestPage> {
                           onChanged: (value) {
                             if (value) {
                               _controller.startAuto();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Auto test dimulai'),
-                                  duration: Duration(seconds: 2),
-                                ),
+                              CustomSnackbar.show(
+                                context,
+                                message: "Auto tes dimulai",
+                                backgroundColor: Colors.red,
                               );
                             } else {
                               _controller.stopAuto();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Auto test dihentikan'),
-                                  duration: Duration(seconds: 2),
-                                ),
+                              CustomSnackbar.show(
+                                context,
+                                message: "Auto test dihentikan",
+                                backgroundColor: Colors.red,
                               );
                             }
                           },
@@ -242,11 +237,11 @@ class _NotificationTestPageState extends State<NotificationTestPage> {
                 child: ElevatedButton.icon(
                   onPressed: () {
                     _controller.cancelAll();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Semua notifikasi dibatalkan'),
-                        duration: Duration(seconds: 2),
-                      ),
+
+                    CustomSnackbar.show(
+                      context,
+                      message: "Semua notifikasi dibatalkan",
+                      backgroundColor: Colors.red,
                     );
                   },
                   icon: const Icon(Icons.cancel_outlined),
@@ -286,9 +281,7 @@ class _NotificationTestPageState extends State<NotificationTestPage> {
           backgroundColor: color,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           elevation: 2,
         ),
       ),
@@ -302,11 +295,10 @@ class _NotificationTestPageState extends State<NotificationTestPage> {
     return ElevatedButton(
       onPressed: () {
         onPressed();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Test dijadwalkan untuk $title'),
-            duration: const Duration(seconds: 2),
-          ),
+        CustomSnackbar.show(
+          context,
+          message: "Test dijadwalkan untuk $title",
+          backgroundColor: Colors.red,
         );
       },
       style: ElevatedButton.styleFrom(
@@ -319,10 +311,7 @@ class _NotificationTestPageState extends State<NotificationTestPage> {
         ),
         elevation: 0,
       ),
-      child: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
+      child: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
     );
   }
 }

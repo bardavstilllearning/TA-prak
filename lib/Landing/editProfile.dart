@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../controller/profileController.dart';
+import 'widgets/custom_snackbar.dart';
 
 class EditProfilePage extends StatefulWidget {
   final Map<String, dynamic>? userData;
@@ -48,13 +49,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final success = await _profileController.uploadPhoto(context, _isUploading);
 
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Foto berhasil diupload! Kembali ke profile untuk melihat perubahan.',
-          ),
-          backgroundColor: Colors.green,
-        ),
+      CustomSnackbar.show(
+        context,
+        message:
+            "Foto berhasil diupload! Kembali ke profile untuk melihat perubahan.",
+        backgroundColor: Colors.green,
       );
     }
   }
@@ -253,9 +252,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       decoration: BoxDecoration(
         color: const Color(0xFFE3F2FD),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: const Color(0xFF6BB6FF).withOpacity(0.3),
-        ),
+        border: Border.all(color: const Color(0xFF6BB6FF).withOpacity(0.3)),
       ),
       child: const Row(
         children: [
@@ -298,7 +295,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       )
                     : const Text(

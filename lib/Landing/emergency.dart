@@ -1,3 +1,4 @@
+import 'package:bencanaku/Landing/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import '../controller/emergencyController.dart';
 
@@ -10,14 +11,15 @@ class EmergencyPage extends StatefulWidget {
   State<EmergencyPage> createState() => _EmergencyPageState();
 }
 
-class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateMixin {
+class _EmergencyPageState extends State<EmergencyPage>
+    with TickerProviderStateMixin {
   // Controller untuk menangani logic emergency
   final EmergencyController _emergencyController = EmergencyController();
-  
+
   // Animation controller untuk efek pulse pada tombol emergency
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
-  
+
   // State variables
   double _currentTiltAngle = 0.0; // Sudut kemiringan saat ini
   bool _isMonitoring = false; // Status monitoring aktif/tidak
@@ -26,21 +28,17 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
-    
+
     // Inisialisasi animation controller untuk efek pulse
     _pulseController = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
     );
-    
+
     // Setup animasi pulse (membesar-mengecil)
-    _pulseAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
 
     // Setup callback functions untuk emergency controller
     _setupEmergencyController();
@@ -69,7 +67,7 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
         // Tambahkan pesan debug dengan timestamp
         String timeStamp = DateTime.now().toString().substring(11, 19);
         _debugMessages.insert(0, '$timeStamp: $message');
-        
+
         // Batasi jumlah pesan debug maksimal 10
         if (_debugMessages.length > 10) {
           _debugMessages.removeLast();
@@ -88,7 +86,7 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
       // Mulai monitoring
       await _emergencyController.startMonitoring();
     }
-    
+
     setState(() {
       _isMonitoring = !_isMonitoring;
     });
@@ -108,10 +106,7 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
             const SizedBox(width: 8),
             const Text(
               'DARURAT!',
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -157,11 +152,10 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
       await _emergencyController.shareEmergencyLocation();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
+        CustomSnackbar.show(
+          context,
+          message: "Error: $e",
+          backgroundColor: Colors.red,
         );
       }
     }
@@ -173,11 +167,10 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
       await _emergencyController.callEmergency();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
+        CustomSnackbar.show(
+          context,
+          message: "Error: $e",
+          backgroundColor: Colors.red,
         );
       }
     }
@@ -262,13 +255,17 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
-                  colors: _isMonitoring 
-                    ? [Colors.red[400]!, Colors.red[600]!] // Merah saat aktif
-                    : [Colors.grey[400]!, Colors.grey[600]!], // Abu-abu saat nonaktif
+                  colors: _isMonitoring
+                      ? [Colors.red[400]!, Colors.red[600]!] // Merah saat aktif
+                      : [
+                          Colors.grey[400]!,
+                          Colors.grey[600]!,
+                        ], // Abu-abu saat nonaktif
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: (_isMonitoring ? Colors.red : Colors.grey).withOpacity(0.4),
+                    color: (_isMonitoring ? Colors.red : Colors.grey)
+                        .withOpacity(0.4),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -303,7 +300,7 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
   /// Widget indikator kemiringan HP
   Widget _buildTiltIndicator() {
     double progress = _emergencyController.tiltProgress;
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -330,14 +327,16 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
               Text(
                 '${_currentTiltAngle.toStringAsFixed(1)}°',
                 style: TextStyle(
-                  color: _currentTiltAngle >= 20 ? Colors.red : Colors.grey[600],
+                  color: _currentTiltAngle >= 20
+                      ? Colors.red
+                      : Colors.grey[600],
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          
+
           // Progress bar timer
           LinearProgressIndicator(
             value: progress,
@@ -347,16 +346,13 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
             ),
           ),
           const SizedBox(height: 8),
-          
+
           // Text status
           Text(
-            progress > 0 
-              ? 'Tahan ${(2 - (progress * 2)).toStringAsFixed(1)}s lagi...'
-              : 'Miringkan HP 70° untuk memicu',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
+            progress > 0
+                ? 'Tahan ${(2 - (progress * 2)).toStringAsFixed(1)}s lagi...'
+                : 'Miringkan HP 70° untuk memicu',
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
           ),
         ],
       ),
@@ -401,10 +397,7 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
       children: [
         const Text(
           'Aksi Darurat Manual:',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         Row(
@@ -423,7 +416,7 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
               ),
             ),
             const SizedBox(width: 12),
-            
+
             // Tombol panggil 112
             Expanded(
               child: ElevatedButton.icon(

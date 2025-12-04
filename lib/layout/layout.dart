@@ -7,11 +7,7 @@ class MainLayout extends StatefulWidget {
   final Widget child;
   final String currentPath;
 
-  const MainLayout({
-    super.key,
-    required this.child,
-    required this.currentPath,
-  });
+  const MainLayout({super.key, required this.child, required this.currentPath});
 
   @override
   State<MainLayout> createState() => _MainLayoutState();
